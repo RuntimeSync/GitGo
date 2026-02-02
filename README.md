@@ -1,54 +1,71 @@
-# 🚀 Code Publisher
+# code-publisher README
 
-Code Publisher is a VS Code extension that automates publishing coding problem solutions (LeetCode and normal programming problems) to GitHub with a single command.
+This is the README for your extension "code-publisher". After writing up a brief description, we recommend including the following sections.
+
+## Features
+
+Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+
+For example if there is an image subfolder under your extension project workspace:
+
+\!\[feature X\]\(images/feature-x.png\)
+
+> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+
+## Requirements
+
+If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+
+## Extension Settings
+
+Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+
+For example:
+
+This extension contributes the following settings:
+
+* `myExtension.enable`: Enable/disable this extension.
+* `myExtension.thing`: Set to `blah` to do something.
+
+## Known Issues
+
+Calling out known issues can help limit users opening duplicate issues against your extension.
+
+## Release Notes
+
+Users appreciate release notes as you update your extension.
+
+### 1.0.0
+
+Initial release of ...
+
+### 1.0.1
+
+Fixed issue #.
+
+### 1.1.0
+
+Added features X, Y, and Z.
 
 ---
 
-## ❓ Problem
+## Following extension guidelines
 
-Developers who solve coding problems daily and maintain GitHub repositories usually perform many repetitive manual steps:
+Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
 
-- Creating folders for each problem  
-- Naming and organizing files  
-- Writing README files  
-- Adding screenshots of outputs or submissions  
-- Running git add, commit, and push commands  
+* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
 
-This workflow is time-consuming, error-prone, and often leads to inconsistent repository structure. Over time, it discourages developers from maintaining well-organized solution repositories.
+## Working with Markdown
 
----
+You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
 
-## ✅ Solution
+* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
+* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
+* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
 
-Code Publisher eliminates this repetitive workflow by providing a one-click publishing system directly inside VS Code.
+## For more information
 
-With a single command, the extension:
+* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
+* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
-- Reads the active solution file  
-- Detects programming language  
-- Creates a problem-specific folder  
-- Copies the solution into the folder  
-- Generates a README.md automatically  
-- Attaches optional screenshots (output / submission)  
-- Runs git pull, add, commit, and push  
-
-All operations happen locally, without requiring users to manually handle folders or Git commands.
-
----
-
-## 🎯 Benefits
-
-- Saves time and effort  
-- Enforces consistent repository structure  
-- Reduces human errors  
-- Improves developer productivity  
-- Encourages maintaining clean GitHub repositories  
-
----
-
-## 👨‍💻 Authors
-
-- **Sujal Patil** – [GitHub](https://github.com/SujalPatil21)  
-- **Shreya Awari** – [GitHub](https://github.com/shreyaawari28)  
-- **Tejas Halvankar** – [GitHub](https://github.com/Tejas-H01)  
-- **Nihal Mishra** – [GitHub](https://github.com/nihal27998)  
+**Enjoy!**
