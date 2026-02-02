@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "code-publisher.helloWorld",
-        "title": "Hello World"
+        "command": "code-publisher.publishSolution",
+        "title": "Publish Solution"
       }
     ]
   },
