@@ -1,7 +1,17 @@
 import * as path from "path";
+import { Result } from "../domain/Result";
 
-export function detectLanguage(filePath: string): string {
+export function detectLanguage(filePath: string): Result<string> {
+
+    if (!filePath) {
+        return { ok: false, errorType: "USER", message: "No active file" };
+    }
+
     const ext = path.extname(filePath).toLowerCase();
+
+    if (!ext) {
+        return { ok: false, errorType: "LOGIC", message: "Unable to detect file extension" };
+    }
 
     const map: Record<string, string> = {
         ".java": "Java",
@@ -14,5 +24,11 @@ export function detectLanguage(filePath: string): string {
         ".rs": "Rust"
     };
 
-    return map[ext] || "Unknown";
+    const lang = map[ext];
+
+    if (!lang) {
+        return { ok: false, errorType: "LOGIC", message: `Unsupported file type: ${ext}` };
+    }
+
+    return { ok: true, data: lang };
 }

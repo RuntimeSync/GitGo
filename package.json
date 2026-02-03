@@ -1,24 +1,100 @@
 {
-  "name": "code-publisher",
-  "displayName": "code-publisher",
+  "name": "gitgo",
+  "displayName": "GitGo",
+  "publisher": "runtimesync",
   "description": "One-click publish coding solutions to GitHub",
   "version": "0.0.1",
+
+  "icon": "assets/icon.png",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RuntimeSync/GitGo"
+  },
+
+  "keywords": [
+    "leetcode",
+    "dsa",
+    "automation",
+    "git",
+    "github",
+    "productivity",
+    "vscode-extension"
+  ],
+
   "engines": {
     "vscode": "^1.108.1"
   },
+
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+
+  "activationEvents": [
+    "onCommand:code-publisher.publishSolution",
+    "onCommand:code-publisher.changeRepository"
+  ],
+
   "main": "./dist/extension.js",
+
   "contributes": {
     "commands": [
       {
         "command": "code-publisher.publishSolution",
         "title": "Publish Solution"
+      },
+      {
+        "command": "code-publisher.changeRepository",
+        "title": "GitGo: Change Repository"
       }
-    ]
+    ],
+
+    "configuration": {
+      "title": "GitGo",
+      "properties": {
+
+        "codePublisher.repoPath": {
+          "type": "string",
+          "default": "",
+          "description": "Local path to the GitHub repository used by GitGo"
+        },
+
+        "codePublisher.author.name": {
+          "type": "string",
+          "default": "",
+          "description": "Your full name"
+        },
+
+        "codePublisher.author.github": {
+          "type": "string",
+          "default": "",
+          "description": "Your GitHub profile URL"
+        },
+
+        "codePublisher.author.linkedin": {
+          "type": "string",
+          "default": "",
+          "description": "Your LinkedIn profile URL"
+        },
+
+        "codePublisher.defaultPushMode": {
+          "type": "string",
+          "enum": ["normal", "pr"],
+          "default": "normal",
+          "description": "Default push mode"
+        },
+
+        "codePublisher.defaultProblemType": {
+          "type": "string",
+          "enum": ["leetcode", "normal"],
+          "default": "leetcode",
+          "description": "Default problem type"
+        }
+
+      }
+    }
   },
+
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && npm run lint && node esbuild.js",
@@ -33,6 +109,7 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+
   "devDependencies": {
     "@types/vscode": "^1.108.1",
     "@types/mocha": "^10.0.10",
