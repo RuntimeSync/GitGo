@@ -1,54 +1,245 @@
 import * as vscode from "vscode";
+
 import { detectLanguage } from "../services/languageDetector";
 import { createProblemFolder } from "../services/folderCreator";
 import { copySolutionFile } from "../services/fileCopier";
 import { generateReadme } from "../services/readmeGenerator";
 import { pickAndCopyScreenshots } from "../services/screenshotHandler";
-import { runGitCommands } from "../services/gitService";
+import { runGitCommands, runGitCommandsWithPR } from "../services/gitService";
+import { setupRepository } from "../services/repoSetupService";
+import { selectParentFolder } from "../services/parentFolderSelector";
+import { selectPushMode } from "../services/pushModeSelector";
+import { askBranchName } from "../services/branchNamePrompt";
+import { selectProblemType } from "../services/problemTypeSelector";
+import { askExecutionTime } from "../services/executionTimePrompt";
+import { askDifficulty } from "../services/difficultyPrompt";
+import { getSolutionFileName } from "../services/solutionFileNameResolver";
+import { getOrCreateAuthor } from "../services/authorService";
+
+import { PushMode } from "../types/pushMode";
+import { ProblemType } from "../types/problemType";
 
 export async function publishSolution() {
 
-    const editor = vscode.window.activeTextEditor;
+  const editor = vscode.window.activeTextEditor;
 
-    if (!editor) {
-        vscode.window.showErrorMessage("No active file open");
-        return;
-    }
+  if (!editor) {
+    vscode.window.showErrorMessage("No active file open");
+    return;
+  }
 
-    const filePath = editor.document.fileName;
-    const code = editor.document.getText();
+  /* ============================= */
+  /* AUTHOR                        */
+  /* ============================= */
 
-    const language = detectLanguage(filePath);
+  const author = await getOrCreateAuthor();
 
-    const folderName = await vscode.window.showInputBox({
-        prompt: "Enter problem folder name (e.g., 231-Power-of-Two)"
-    });
+  const filePath = editor.document.fileName;
+  const code = editor.document.getText();
 
-    if (!folderName) {
-        vscode.window.showErrorMessage("Folder name required");
-        return;
-    }
-    
-const basePath = "C:/Projects/test";
+  /* ============================= */
+  /* LANGUAGE                      */
+  /* ============================= */
 
+  const languageResult = detectLanguage(filePath);
 
-    const folderPath = createProblemFolder(basePath, folderName);
+  if (!languageResult.ok) {
+    vscode.window.showErrorMessage(languageResult.message);
+    return;
+  }
 
-    copySolutionFile(filePath, folderPath, language);
+  const language = languageResult.data;
 
-    generateReadme(folderPath, folderName, language, code);
+  /* ============================= */
+  /* STANDARD FILE NAME            */
+  /* ============================= */
 
-    await pickAndCopyScreenshots(folderPath);
+  const solutionFileName = getSolutionFileName(language);
+
+  /* ============================= */
+  /* PROBLEM TYPE                  */
+  /* ============================= */
+
+  const problemType = await selectProblemType();
+
+  /* ============================= */
+  /* DIFFICULTY + EXEC TIME        */
+  /* ============================= */
+
+  let difficulty = "";
+  let executionTime = "";
+
+  if (problemType === ProblemType.LEETCODE) {
 
     try {
-        runGitCommands(basePath, folderName);
-    } catch (err) {
-        vscode.window.showErrorMessage("Git operation failed. Check terminal & repo setup.");
-        return;
+      difficulty = await askDifficulty();
+    } catch (err: any) {
+      vscode.window.showErrorMessage(err.message || "Difficulty required");
+      return;
     }
 
-    vscode.window.showInformationMessage(
-`Published Successfully 
-${folderName}`
-    );
+    try {
+      executionTime = await askExecutionTime();
+    } catch (err: any) {
+      vscode.window.showErrorMessage(err.message || "Execution time required");
+      return;
+    }
+  }
+
+  /* ============================= */
+  /* REPOSITORY SETUP              */
+  /* ============================= */
+
+  const config = vscode.workspace.getConfiguration("gitgo");
+  let basePath = config.get<string>("repoPath");
+
+  if (basePath && basePath.trim() === "") {
+    basePath = undefined;
+  }
+
+  if (!basePath) {
+    try {
+      basePath = await setupRepository();
+
+      await config.update(
+        "repoPath",
+        basePath,
+        vscode.ConfigurationTarget.Global
+      );
+    } catch (err: any) {
+      vscode.window.showErrorMessage(err.message || "Repository setup failed");
+      return;
+    }
+  }
+
+  /* ============================= */
+  /* PARENT FOLDER                 */
+  /* ============================= */
+
+  let parentFolder: string | null;
+
+  try {
+    parentFolder = await selectParentFolder(basePath);
+  } catch (err: any) {
+    vscode.window.showErrorMessage(err.message || "Parent folder selection failed");
+    return;
+  }
+
+  /* ============================= */
+  /* PROBLEM FOLDER NAME           */
+  /* ============================= */
+
+  const folderNameInput = await vscode.window.showInputBox({
+    prompt: "Enter problem folder name (e.g., 231-Power-of-Two)"
+  });
+
+  if (!folderNameInput) {
+    vscode.window.showErrorMessage("Folder name required");
+    return;
+  }
+
+  const folderName = folderNameInput.trim();
+
+  /* ============================= */
+  /* CREATE FOLDER                 */
+  /* ============================= */
+
+  const folderResult = createProblemFolder(
+    basePath,
+    folderName,
+    parentFolder
+  );
+
+  if (!folderResult.ok) {
+    vscode.window.showErrorMessage(folderResult.message);
+    return;
+  }
+
+  const folderPath = folderResult.data;
+
+  /* ============================= */
+  /* COPY SOLUTION                 */
+  /* ============================= */
+
+  const copyResult = copySolutionFile(
+    filePath,
+    folderPath,
+    solutionFileName
+  );
+
+  if (!copyResult.ok) {
+    vscode.window.showErrorMessage(copyResult.message);
+    return;
+  }
+
+  /* ============================= */
+  /* GENERATE README               */
+  /* ============================= */
+
+  const readmeResult = generateReadme(
+    folderPath,
+    problemType,
+    folderName,
+    language,
+    code,
+    executionTime,
+    difficulty,
+    solutionFileName,
+    author
+  );
+
+  if (!readmeResult.ok) {
+    vscode.window.showErrorMessage(readmeResult.message);
+    return;
+  }
+
+  /* ============================= */
+  /* SCREENSHOTS                   */
+  /* ============================= */
+
+  await pickAndCopyScreenshots(folderPath);
+
+  /* ============================= */
+  /* GIT AUTOMATION                */
+  /* ============================= */
+
+  try {
+
+    const pushMode = await selectPushMode();
+
+    if (pushMode === PushMode.NORMAL) {
+
+      runGitCommands(basePath, folderName);
+
+    } else {
+
+      const branchName = await askBranchName();
+
+      runGitCommandsWithPR(
+        basePath,
+        folderName,
+        branchName,
+        executionTime,
+        problemType,
+        difficulty,
+        author.name,
+        author.github,
+        solutionFileName
+      );
+    }
+
+  } catch (err: any) {
+    vscode.window.showErrorMessage(err.message || "Git operation failed");
+    return;
+  }
+
+  /* ============================= */
+  /* SUCCESS                       */
+  /* ============================= */
+
+  vscode.window.showInformationMessage(
+    `Published Successfully 
+${folderName}
+`
+  );
 }

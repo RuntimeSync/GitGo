@@ -1,9 +1,17 @@
-# Change Log
+# Changelog
 
-All notable changes to the "code-publisher" extension will be documented in this file.
+All notable changes to the **GitGo** extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+This project follows recommendations from [Keep a Changelog](https://keepachangelog.com/).
+
+---
 
 ## [Unreleased]
 
-- Initial release
+- Initial release of GitGo
+- One-command solution publishing pipeline
+- Automatic folder creation
+- README generation
+- Screenshot handling
+- Git automation (normal push & PR mode)
+- Settings and memory support

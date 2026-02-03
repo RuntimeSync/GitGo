@@ -1,23 +1,88 @@
 {
-  "name": "code-publisher",
-  "displayName": "code-publisher",
-  "description": "One-click publish coding solutions to GitHub",
-  "version": "0.0.1",
+  "name": "gitgo",
+  "displayName": "GitGo",
+  "publisher": "RuntimeSync",
+  "description": "Publish coding solutions to GitHub with one command",
+  "version": "0.0.3",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RuntimeSync/GitGo"
+  },
+  "keywords": [
+    "leetcode",
+    "dsa",
+    "automation",
+    "git",
+    "github",
+    "productivity",
+    "vscode-extension"
+  ],
   "engines": {
-    "vscode": "^1.108.1"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:gitgo.publishSolution",
+    "onCommand:gitgo.changeRepository"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "code-publisher.publishSolution",
-        "title": "Publish Solution"
+        "command": "gitgo.publishSolution",
+        "title": "GitGo: Publish Solution"
+      },
+      {
+        "command": "gitgo.changeRepository",
+        "title": "GitGo: Change Repository"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "GitGo",
+      "properties": {
+        "gitgo.repoPath": {
+          "type": "string",
+          "default": "",
+          "description": "Local path to the GitHub repository used by GitGo"
+        },
+        "gitgo.author.name": {
+          "type": "string",
+          "default": "",
+          "description": "Your full name"
+        },
+        "gitgo.author.github": {
+          "type": "string",
+          "default": "",
+          "description": "Your GitHub profile URL"
+        },
+        "gitgo.author.linkedin": {
+          "type": "string",
+          "default": "",
+          "description": "Your LinkedIn profile URL"
+        },
+        "gitgo.defaultPushMode": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "pr"
+          ],
+          "default": "normal",
+          "description": "Default push mode"
+        },
+        "gitgo.defaultProblemType": {
+          "type": "string",
+          "enum": [
+            "leetcode",
+            "normal"
+          ],
+          "default": "leetcode",
+          "description": "Default problem type"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -34,15 +99,18 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.108.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.52.0",
-    "eslint": "^9.39.2",
+    "@types/vscode": "^1.80.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.52.0"
+  },
+  "dependencies": {
+    "@vscode/vsce": "^3.7.1"
   }
 }
