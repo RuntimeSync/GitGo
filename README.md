@@ -232,10 +232,10 @@ No repeated setup.
 
 ## 👥 Authors
 
-- Sujal Patil  
-- Shreya Awari  
-- Tejas Halvankar  
-- Nihal Mishra  
+- **Sujal Patil** – [GitHub](https://github.com/SujalPatil21)  
+- **Shreya Awari** – [GitHub](https://github.com/shreyaawari28)  
+- **Tejas Halvankar** – [GitHub](https://github.com/Tejas-H01)  
+- **Nihal Mishra** – [GitHub](https://github.com/nihal27998) 
 
 ---
 
