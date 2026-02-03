@@ -1,4 +1,4 @@
-# code-publisher README
+# GitGo README
 
 This is the README for your extension "code-publisher". After writing up a brief description, we recommend including the following sections.
 
