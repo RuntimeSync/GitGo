@@ -12,7 +12,7 @@ export async function selectParentFolder(
   repoPath: string
 ): Promise<string | null> {
 
-  const config = vscode.workspace.getConfiguration("codePublisher");
+  const config = vscode.workspace.getConfiguration("gitgo");
   const lastUsed = config.get<string>(CONFIG_KEY);
 
   const entries = fs.readdirSync(repoPath, { withFileTypes: true });

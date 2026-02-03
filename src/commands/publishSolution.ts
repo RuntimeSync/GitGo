@@ -90,7 +90,7 @@ export async function publishSolution() {
   /* REPOSITORY SETUP              */
   /* ============================= */
 
-  const config = vscode.workspace.getConfiguration("codePublisher");
+  const config = vscode.workspace.getConfiguration("gitgo");
   let basePath = config.get<string>("repoPath");
 
   if (basePath && basePath.trim() === "") {
@@ -238,8 +238,8 @@ export async function publishSolution() {
   /* ============================= */
 
   vscode.window.showInformationMessage(
-    `Published Successfully 🚀
+    `Published Successfully 
 ${folderName}
-PR description copied to clipboard`
+`
   );
 }

@@ -5,12 +5,12 @@ import { changeRepository } from "./commands/changeRepository";
 export function activate(context: vscode.ExtensionContext) {
 
   const publishCmd = vscode.commands.registerCommand(
-    "code-publisher.publishSolution",
+    "gitgo.publishSolution",
     publishSolution
   );
 
   const changeRepoCmd = vscode.commands.registerCommand(
-    "code-publisher.changeRepository",
+    "gitgo.changeRepository",
     changeRepository
   );
 

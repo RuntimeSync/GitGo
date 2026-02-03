@@ -1,12 +1,14 @@
-#  GitGo — One-Command Solution Publisher for VS Code
+# GitGo — One-Command Solution Publisher for VS Code
+
+Stop wasting time documenting solutions. Publish in one command.
 
 GitGo is a VS Code extension that publishes solved coding problems to GitHub using a single command by automating folder creation, README generation, screenshot handling, and Git operations.
 
-> Write Code → Run **Publish Solution** → Done.
+Write Code → Run **Publish Solution** → Done.
 
 ---
 
-## ❓ Problem
+## Problem
 
 Developers who regularly solve coding problems and maintain GitHub repositories must manually:
 
@@ -31,7 +33,7 @@ Publishing a solution is treated as many independent steps instead of a single a
 
 ---
 
-## ✅ Solution
+## Solution
 
 GitGo converts solution publishing into one atomic pipeline executed by a single command.
 
@@ -44,7 +46,87 @@ No git commands.
 
 ---
 
-## 🎯 Target Users
+## Installation
+
+1. Open VS Code  
+2. Go to Extensions (`Ctrl + Shift + X`)  
+3. Search **GitGo**  
+4. Click Install  
+
+---
+
+## Usage
+
+1. Open a solution file  
+2. Press `Ctrl + Shift + P`  
+3. Run **GitGo: Publish Solution**  
+4. Follow prompts  
+
+Your solution is published automatically.
+
+---
+
+## Commands
+
+GitGo exposes the following VS Code commands:
+
+- **GitGo: Publish Solution**  
+  Runs the complete solution publishing pipeline.
+
+- **GitGo: Change Repository**  
+  Change or reset the target GitHub repository used for publishing.
+
+Access commands using:
+
+`Ctrl + Shift + P` → Type **GitGo**
+
+---
+
+## Quick Start
+
+1. Open your solution file in VS Code  
+2. Press `Ctrl + Shift + P`  
+3. Run **GitGo: Publish Solution**  
+4. Select problem type (LeetCode / Normal)  
+5. If LeetCode:
+   - Enter difficulty  
+   - Enter execution time  
+6. Choose parent folder  
+7. Enter problem folder name  
+
+GitGo will automatically:
+
+- Create the folder  
+- Copy and rename solution file  
+- Generate README  
+- Attach screenshots  
+- Commit changes  
+- Push to GitHub or create a Pull Request  
+
+---
+
+## First-Time Setup
+
+On first run, GitGo will ask for:
+
+- Repository path  
+- Author name  
+- GitHub profile link  
+- Default push mode  
+
+These values are saved and reused automatically.
+
+---
+
+## Requirements
+
+- Git installed  
+- Git configured with GitHub  
+- Existing GitHub repository  
+
+---
+
+## Target Users
 
 - DSA / LeetCode practitioners  
 - Interview preparation students  
@@ -52,7 +134,7 @@ No git commands.
 
 ---
 
-## 🧠 Core Design Principle
+## Core Design Principle
 
 **One Command = One Complete Publish Pipeline**
 
@@ -60,21 +142,7 @@ Either everything succeeds or nothing is written.
 
 ---
 
-## 🔁 User Workflow
-
-1. Write solution code  
-2. Run `Publish Solution` command  
-3. Select problem type (LeetCode / Normal)  
-4. If LeetCode, provide difficulty and execution time  
-5. Select repository (first run only)  
-6. Choose parent folder  
-7. Enter problem folder name  
-
-GitGo automatically handles the rest.
-
----
-
-## 🏗 Architecture
+## Architecture
 
 GitGo uses a modular service-based architecture:
 
@@ -95,7 +163,7 @@ Each module has a single responsibility.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - TypeScript  
 - VS Code Extension API  
@@ -104,14 +172,13 @@ Each module has a single responsibility.
 - Git CLI  
 - Node core modules  
 
-No backend.  
-No database.  
-No cloud services.  
-No GitHub API.
+![VS Code](https://img.shields.io/badge/VS%20Code-Extension-blue)
+![TypeScript](https://img.shields.io/badge/Made%20with-TypeScript-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## 📁 Folder Structure Generated
+## Folder Structure Generated
 
 Each published problem produces:
 
@@ -120,17 +187,17 @@ Each published problem produces:
 - One test case screenshot  
 - One submission screenshot  
 
-This structure is consistent across all problems.
+Structure is consistent across all problems.
 
 ---
 
-## 📏 Standardized Filenames
+## Standardized Filenames
 
 Regardless of original filename, solutions are renamed to a consistent format to guarantee uniformity across the repository.
 
 ---
 
-## 📝 README Generation
+## README Generation
 
 ### LeetCode Problems
 
@@ -158,7 +225,7 @@ Generated README contains:
 
 ---
 
-## 🔄 Git Automation
+## Git Automation
 
 GitGo supports two publishing modes:
 
@@ -168,17 +235,17 @@ Solution is committed and pushed directly to the default branch.
 
 ### Pull Request Mode
 
-GitGo creates a new branch, commits the solution, pushes it, and opens a pull request automatically.
+GitGo creates a new branch, commits the solution, pushes it, and generates a pull request.
 
 ---
 
-## 🌿 Default Branch Detection
+## Default Branch Detection
 
 GitGo automatically detects the repository’s default branch, even if it is not named `main` or `master`.
 
 ---
 
-## ⚙ Settings
+## Settings
 
 User configurable:
 
@@ -191,7 +258,7 @@ User configurable:
 
 ---
 
-## 🧠 Memory Features
+## Memory Features
 
 GitGo remembers:
 
@@ -203,7 +270,7 @@ No repeated setup.
 
 ---
 
-## 🛡 Error Handling
+## Error Handling
 
 - All operations executed through safe wrappers  
 - Friendly error messages  
@@ -212,15 +279,14 @@ No repeated setup.
 
 ---
 
-## 🔐 Security
+## Security
 
 - No credentials stored  
 - Uses existing git authentication  
-- No GitHub API usage  
 
 ---
 
-## 📌 Project Status
+## Project Status
 
 - Core pipeline complete  
 - Settings UI complete  
@@ -230,15 +296,15 @@ No repeated setup.
 
 ---
 
-## 👥 Authors
+## Authors
 
-- **Sujal Patil** – [GitHub](https://github.com/SujalPatil21)  
-- **Shreya Awari** – [GitHub](https://github.com/shreyaawari28)  
-- **Tejas Halvankar** – [GitHub](https://github.com/Tejas-H01)  
-- **Nihal Mishra** – [GitHub](https://github.com/nihal27998) 
+- Sujal Patil – https://github.com/SujalPatil21  
+- Shreya Awari – https://github.com/shreyaawari28  
+- Tejas Halvankar – https://github.com/Tejas-H01  
+- Nihal Mishra – https://github.com/nihal27998  
 
 ---
 
-## 📄 Resume Line
+## License
 
-Built a VS Code extension that automates end-to-end publishing of coding solutions to GitHub with one command, including folder creation, README generation, screenshot handling, git automation, and pull-request generation.
+MIT License

@@ -3,7 +3,7 @@ import { Author } from "../domain/Author";
 
 export async function getOrCreateAuthor(): Promise<Author> {
 
-  const config = vscode.workspace.getConfiguration("codePublisher");
+  const config = vscode.workspace.getConfiguration("gitgo");
 
   let name = config.get<string>("author.name");
   let github = config.get<string>("author.github");
