@@ -11,7 +11,8 @@ export async function getOrCreateAuthor(): Promise<Author> {
 
   if (!name) {
     name = await vscode.window.showInputBox({
-      prompt: "Enter your name"
+      prompt: "Enter your name",
+      ignoreFocusOut: true
     });
 
     if (!name) {
@@ -27,7 +28,8 @@ export async function getOrCreateAuthor(): Promise<Author> {
 
   if (!github) {
     github = await vscode.window.showInputBox({
-      prompt: "Enter GitHub profile URL"
+      prompt: "Enter GitHub profile URL",
+      ignoreFocusOut: true
     });
 
     if (!github) {
@@ -43,7 +45,8 @@ export async function getOrCreateAuthor(): Promise<Author> {
 
   if (!linkedin) {
     linkedin = await vscode.window.showInputBox({
-      prompt: "Enter LinkedIn profile URL"
+      prompt: "Enter LinkedIn profile URL",
+      ignoreFocusOut: true
     });
 
     if (!linkedin) {
