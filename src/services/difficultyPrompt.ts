@@ -4,7 +4,10 @@ export async function askDifficulty(): Promise<string> {
 
   const input = await vscode.window.showQuickPick(
     ["Easy", "Medium", "Hard"],
-    { placeHolder: "Select problem difficulty" }
+    {
+      placeHolder: "Select problem difficulty",
+      ignoreFocusOut: true
+    }
   );
 
   if (!input) {

@@ -8,7 +8,10 @@ export async function selectProblemType(): Promise<ProblemType> {
       { label: "LeetCode Problem", value: ProblemType.LEETCODE },
       { label: "Normal Program", value: ProblemType.NORMAL }
     ],
-    { placeHolder: "Select problem type" }
+    {
+      placeHolder: "Select problem type",
+      ignoreFocusOut: true
+    }
   );
 
   if (!choice) {

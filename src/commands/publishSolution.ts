@@ -9,6 +9,7 @@ import { runGitCommands, runGitCommandsWithPR } from "../services/gitService";
 import { setupRepository } from "../services/repoSetupService";
 import { selectParentFolder } from "../services/parentFolderSelector";
 import { selectPushMode } from "../services/pushModeSelector";
+
 import { askBranchName } from "../services/branchNamePrompt";
 import { selectProblemType } from "../services/problemTypeSelector";
 import { askExecutionTime } from "../services/executionTimePrompt";
@@ -117,6 +118,7 @@ export async function publishSolution() {
   /* ============================= */
 
   let parentFolder: string | null;
+  let problemFolderFromParent: string | null = null;
 
   try {
     parentFolder = await selectParentFolder(basePath);
@@ -125,20 +127,39 @@ export async function publishSolution() {
     return;
   }
 
+  if (parentFolder && parentFolder.startsWith("__SELF__/")) {
+    problemFolderFromParent =
+      parentFolder.replace("__SELF__/", "");
+    parentFolder = null;
+  }
+
   /* ============================= */
   /* PROBLEM FOLDER NAME           */
   /* ============================= */
 
-  const folderNameInput = await vscode.window.showInputBox({
-    prompt: "Enter problem folder name (e.g., 231-Power-of-Two)"
-  });
+  let folderName = "";
 
-  if (!folderNameInput) {
-    vscode.window.showErrorMessage("Folder name required");
-    return;
+  if (problemFolderFromParent) {
+
+    folderName = problemFolderFromParent;
+
+  } else {
+
+    while (!folderName) {
+
+      const folderNameInput = await vscode.window.showInputBox({
+        prompt: "Enter problem folder name (e.g., 231-Power-of-Two)",
+        ignoreFocusOut: true
+      });
+
+      if (!folderNameInput) {
+        continue;
+      }
+
+      folderName = folderNameInput.trim();
+    }
+
   }
-
-  const folderName = folderNameInput.trim();
 
   /* ============================= */
   /* CREATE FOLDER                 */

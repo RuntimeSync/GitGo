@@ -8,7 +8,10 @@ export async function selectPushMode(): Promise<PushMode> {
       { label: "Normal Push", value: PushMode.NORMAL },
       { label: "Generate Pull Request", value: PushMode.PULL_REQUEST }
     ],
-    { placeHolder: "Select push mode" }
+    {
+      placeHolder: "Select push mode",
+      ignoreFocusOut: true
+    }
   );
 
   if (!choice) {
