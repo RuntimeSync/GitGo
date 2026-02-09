@@ -13,12 +13,39 @@ export async function pickAndCopyScreenshots(folderPath: string) {
     });
 
     if (!files || files.length === 0) {
-        return; // optional feature
+        return;
     }
 
     for (const file of files) {
-        const fileName = path.basename(file.fsPath);
-        const destPath = path.join(folderPath, fileName);
+
+        const choice = await vscode.window.showQuickPick(
+            [
+                { label: "Test Case Output", value: "testcases.png" },
+                { label: "Accepted Submission", value: "submission.png" },
+                { label: "Skip", value: "skip" }
+            ],
+            {
+                placeHolder: `Classify screenshot: ${path.basename(file.fsPath)}`,
+                ignoreFocusOut: true
+            }
+        );
+
+        if (!choice || choice.value === "skip") {
+            continue;
+        }
+
+        const destPath = path.join(folderPath, choice.value);
+
+        // Copy
         fs.copyFileSync(file.fsPath, destPath);
+
+        // Delete original
+        try {
+            fs.unlinkSync(file.fsPath);
+        } catch {
+            vscode.window.showWarningMessage(
+                `Copied but could not delete original: ${file.fsPath}`
+            );
+        }
     }
 }
