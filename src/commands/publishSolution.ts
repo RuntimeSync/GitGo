@@ -4,7 +4,7 @@ import { detectLanguage } from "../services/languageDetector";
 import { createProblemFolder } from "../services/folderCreator";
 import { copySolutionFile } from "../services/fileCopier";
 import { generateReadme } from "../services/readmeGenerator";
-import { pickAndCopyScreenshots } from "../services/screenshotHandler";
+import { handleScreenshotFlow } from "../services/screenshotHandler";
 import { runGitCommands, runGitCommandsWithPR } from "../services/gitService";
 import { setupRepository } from "../services/repoSetupService";
 import { selectParentFolder } from "../services/parentFolderSelector";
@@ -218,7 +218,7 @@ export async function publishSolution() {
   /* SCREENSHOTS                   */
   /* ============================= */
 
-  await pickAndCopyScreenshots(folderPath);
+ await handleScreenshotFlow(folderPath);
 
   /* ============================= */
   /* GIT AUTOMATION                */

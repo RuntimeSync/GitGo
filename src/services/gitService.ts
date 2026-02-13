@@ -10,8 +10,8 @@ import { generatePRDescription } from "./prDescriptionGenerator";
 
 function safeExec(command: string, cwd: string) {
   try {
-    return execSync(command, { cwd, stdio: "inherit" });
-  } catch (err) {
+    return execSync(command, { cwd, stdio: "pipe" });
+  } catch {
     throw new Error(`Git command failed: ${command}`);
   }
 }
@@ -27,20 +27,22 @@ export function runGitCommands(
   try {
     const branch = getDefaultBranch(repoPath);
 
+    // Always be on correct branch first
     safeExec(`git checkout ${branch}`, repoPath);
     safeExec(`git pull origin ${branch}`, repoPath);
 
+    // Stage + commit
     safeExec(`git add .`, repoPath);
     safeExec(
-      `git commit -m "Add solution and documentation for ${problemName}"`,
+      `git diff --cached --quiet || git commit -m "Add solution and documentation for ${problemName}"`,
       repoPath
     );
+
+    // Push
     safeExec(`git push origin ${branch}`, repoPath);
 
   } catch (err: any) {
-    vscode.window.showErrorMessage(
-      err.message || "Git operation failed"
-    );
+    vscode.window.showErrorMessage(err.message || "Git operation failed");
   }
 }
 
@@ -62,57 +64,28 @@ export function runGitCommandsWithPR(
   try {
     const baseBranch = getDefaultBranch(repoPath);
 
-    /* ============================= */
-    /* SYNC BASE BRANCH              */
-    /* ============================= */
-
+    // Sync base branch
     safeExec(`git checkout ${baseBranch}`, repoPath);
     safeExec(`git pull origin ${baseBranch}`, repoPath);
 
-    /* ============================= */
-    /* DELETE LOCAL BRANCH IF EXISTS */
-    /* ============================= */
+    // Remove existing branch (local + remote)
+    try { safeExec(`git branch -D ${branchName}`, repoPath); } catch {}
+    try { safeExec(`git push origin --delete ${branchName}`, repoPath); } catch {}
 
-    try {
-      safeExec(`git branch -D ${branchName}`, repoPath);
-    } catch {
-      // branch does not exist locally — ignore
-    }
-
-    /* ============================= */
-    /* DELETE REMOTE BRANCH IF EXISTS*/
-    /* ============================= */
-
-    try {
-      safeExec(`git push origin --delete ${branchName}`, repoPath);
-    } catch {
-      // branch does not exist remotely — ignore
-    }
-
-    /* ============================= */
-    /* CREATE FRESH FEATURE BRANCH   */
-    /* ============================= */
-
+    // Create and switch to feature branch
     safeExec(`git checkout -b ${branchName}`, repoPath);
 
-    /* ============================= */
-    /* COMMIT & PUSH                */
-    /* ============================= */
-
+    // Stage + commit ON THE PR BRANCH
     safeExec(`git add .`, repoPath);
     safeExec(
-      `git commit -m "Add solution and documentation for ${problemName}"`,
-      repoPath
-    );
-    safeExec(
-      `git push -u origin ${branchName}`,
+      `git diff --cached --quiet || git commit -m "Add solution and documentation for ${problemName}"`,
       repoPath
     );
 
-    /* ============================= */
-    /* PR DESCRIPTION GENERATION     */
-    /* ============================= */
+    // Push branch
+    safeExec(`git push -u origin ${branchName}`, repoPath);
 
+    // PR description
     const normalizedAuthorGithub = authorGithub.startsWith("http")
       ? authorGithub
       : `https://github.com/${authorGithub}`;
@@ -130,23 +103,16 @@ export function runGitCommandsWithPR(
 
     vscode.env.clipboard.writeText(prDescription);
 
-    /* ============================= */
-    /* OPEN PR PAGE                  */
-    /* ============================= */
-
+    // Open PR page
     const repoInfoResult = getRepoInfo(repoPath);
-
     if (repoInfoResult.ok) {
       const prUrl =
         `https://github.com/${repoInfoResult.data.owner}/${repoInfoResult.data.repo}` +
         `/compare/${baseBranch}...${branchName}?expand=1`;
-
       vscode.env.openExternal(vscode.Uri.parse(prUrl));
     }
 
   } catch (err: any) {
-    vscode.window.showErrorMessage(
-      err.message || "Git operation failed"
-    );
+    vscode.window.showErrorMessage(err.message || "Git operation failed");
   }
 }

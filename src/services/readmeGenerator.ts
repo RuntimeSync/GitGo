@@ -19,20 +19,45 @@ export function generateReadme(
 ): Result<void> {
 
   try {
+
+    // Detect if screenshots exist
+    const testCaseExists = fs.existsSync(
+      path.join(folderPath, "testcases.png")
+    );
+
+    const submissionExists = fs.existsSync(
+      path.join(folderPath, "submission.png")
+    );
+
     let content = "";
 
     if (problemType === ProblemType.LEETCODE) {
-content = getLeetCodeReadme({
-  problemName: problemName,
-  language: language,
-  difficulty: difficulty,
-  executionTime: executionTime,
-  solutionFile: solutionFileName,
-  authorName: author.name,
-  github: author.github,
-  linkedin: author.linkedin
-});
 
+      content = getLeetCodeReadme({
+        problemName: problemName,
+        language: language,
+        difficulty: difficulty,
+        executionTime: executionTime,
+        solutionFile: solutionFileName,
+        authorName: author.name,
+        github: author.github,
+        linkedin: author.linkedin
+      });
+
+      // Remove screenshot sections if missing
+      if (!testCaseExists) {
+        content = content.replace(
+          /📸 \*\*Test Case Screenshot\*\*[\s\S]*?\n\n/,
+          ""
+        );
+      }
+
+      if (!submissionExists) {
+        content = content.replace(
+          /📸 \*\*Submission Screenshot\*\*[\s\S]*?\n\n/,
+          ""
+        );
+      }
 
     } else {
 
