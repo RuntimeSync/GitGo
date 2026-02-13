@@ -3,34 +3,23 @@ import * as path from "path";
 import { Result } from "../domain/Result";
 
 export function copySolutionFile(
-    sourcePath: string,
-    destFolder: string,
-    language: string
+  sourcePath: string,
+  destFolder: string,
+  solutionFileName: string
 ): Result<void> {
 
-    try {
-        const extensionMap: Record<string, string> = {
-            "Java": ".java",
-            "Python": ".py",
-            "C++": ".cpp",
-            "C": ".c",
-            "JavaScript": ".js",
-            "TypeScript": ".ts"
-        };
+  try {
+    const destinationPath = path.join(destFolder, solutionFileName);
 
-        const ext = extensionMap[language] || ".txt";
+    fs.copyFileSync(sourcePath, destinationPath);
 
-        const destinationPath = path.join(destFolder, `Solution${ext}`);
+    return { ok: true, data: undefined };
 
-        fs.copyFileSync(sourcePath, destinationPath);
-
-        return { ok: true, data: undefined };
-
-    } catch {
-        return {
-            ok: false,
-            errorType: "ENV",
-            message: "Failed to copy solution file"
-        };
-    }
+  } catch {
+    return {
+      ok: false,
+      errorType: "ENV",
+      message: "Failed to copy solution file"
+    };
+  }
 }
